@@ -18,19 +18,25 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18"
+          cache: "npm"
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build
         env:
           NODE_ENV: production
+          BASE_URL: /PetHelperWeb/
         run: npm run build
+
+      - name: Verify Build
+        run: |
+          ls -la dist
+          cat dist/index.html
 
       - name: Create .nojekyll file
         run: |
           touch dist/.nojekyll
-          ls -la dist
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
