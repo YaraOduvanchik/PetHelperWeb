@@ -20,13 +20,18 @@ jobs:
         run: npm install
 
       - name: Build
+        env:
+          NODE_ENV: production
         run: npm run build
+
+      - name: List build directory
+        run: ls -la dist
 
       - name: Deploy to Production
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: build
+          folder: dist
           clean: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
