@@ -1,7 +1,13 @@
 import type { LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import {
+	AttributionControl,
+	MapContainer,
+	Marker,
+	Popup,
+	TileLayer,
+} from "react-leaflet";
 
 type Clinic = {
 	id: number;
@@ -79,12 +85,15 @@ function MapPage() {
 
 				{/* Карта */}
 				<div className="bg-white p-4 shadow rounded-lg mb-6">
+					{" "}
 					<MapContainer
 						center={[55.751244, 37.618423] as LatLngExpression}
 						zoom={12}
 						style={{ height: "500px", width: "100%" }}
+						attributionControl={false}
 					>
 						<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+						<AttributionControl position="topleft" />
 						{clinics.map((clinic) => (
 							<Marker
 								key={clinic.id}

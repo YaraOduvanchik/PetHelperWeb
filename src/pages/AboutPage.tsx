@@ -1,14 +1,14 @@
 function AboutPage() {
 	return (
-		<div className="min-h-screen bg-gray-50 py-8">
+		<div className="bg-gray-50 py-8">
 			<div className="container mx-auto px-4">
 				<div className="max-w-4xl mx-auto">
 					<h1 className="text-3xl font-bold mb-8">О нас</h1>
 
 					<div className="bg-white rounded-xl shadow-md overflow-hidden">
-						<div className="relative h-64">
+						<div className="relative h-100">
 							<img
-								src="https://via.placeholder.com/1200x400"
+								src="images/team.jpg"
 								alt="Pet Helper Team"
 								className="w-full h-full object-cover"
 							/>
@@ -32,7 +32,6 @@ function AboutPage() {
 									клиниками.
 								</p>
 							</div>
-
 							<div>
 								<h3 className="text-xl font-semibold mb-3">
 									Что мы предлагаем
@@ -75,11 +74,10 @@ function AboutPage() {
 										</div>
 									</li>
 								</ul>
-							</div>
-
+							</div>{" "}
 							<div>
 								<h3 className="text-xl font-semibold mb-3">Наша команда</h3>
-								<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+								<div className="grid grid-cols-2 md:grid-cols-3 gap-8 justify-items-center max-w-3xl mx-auto">
 									{[
 										{ name: "Дмитрий Луценко", role: "Основатель" },
 										{

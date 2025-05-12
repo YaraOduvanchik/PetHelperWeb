@@ -5,7 +5,7 @@ function HomePage() {
 			title: "Новая ветеринарная клиника",
 			content:
 				"В центре города открылась новая современная ветеринарная клиника с новейшим оборудованием",
-			image: "https://via.placeholder.com/300x200",
+			image: "images/vetclinica.jpg",
 			date: "10 мая 2025",
 		},
 		{
@@ -13,7 +13,7 @@ function HomePage() {
 			title: "Акция на вакцинацию",
 			content:
 				"До конца месяца действует скидка 20% на все виды вакцинации для кошек и собак",
-			image: "https://via.placeholder.com/300x200",
+			image: "images/vaccination.jpg",
 			date: "9 мая 2025",
 		},
 	];

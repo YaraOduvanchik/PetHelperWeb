@@ -11,7 +11,7 @@ function VetsPage() {
 			specialization: "Терапевт",
 			experience: "10 лет",
 			rating: 4.8,
-			photo: "https://via.placeholder.com/150",
+			photo: "images/vet1.jpg",
 			lastOnline: "5 минут назад",
 		},
 		{
@@ -21,7 +21,7 @@ function VetsPage() {
 			specialization: "Хирург",
 			experience: "15 лет",
 			rating: 4.9,
-			photo: "https://via.placeholder.com/150",
+			photo: "images/vet2.jpg",
 			lastOnline: "Онлайн",
 		},
 		{
@@ -31,7 +31,7 @@ function VetsPage() {
 			specialization: "Стоматолог",
 			experience: "8 лет",
 			rating: 4.7,
-			photo: "https://via.placeholder.com/150",
+			photo: "images/vet3.jpg",
 			lastOnline: "2 часа назад",
 		},
 	];
