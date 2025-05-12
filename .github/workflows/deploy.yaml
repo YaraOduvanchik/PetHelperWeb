@@ -26,13 +26,11 @@ jobs:
       - name: Build
         env:
           NODE_ENV: production
-          BASE_URL: /PetHelperWeb/
-        run: npm run build
+          VITE_BASE_URL: /PetHelperWeb/
+        run: npm run prod
 
-      - name: Verify Build
-        run: |
-          ls -la dist
-          cat dist/index.html
+      - name: List build output
+        run: ls -la dist
 
       - name: Create .nojekyll file
         run: |
