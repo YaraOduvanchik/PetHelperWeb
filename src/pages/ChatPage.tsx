@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function ChatPage() {
 	const { vetId } = useParams();
+	const navigate = useNavigate();
 	const [messages, setMessages] = useState([
 		{ id: 1, sender: "Вы", content: "Здравствуйте, доктор!", time: "10:00" },
 		{
@@ -66,11 +67,20 @@ function ChatPage() {
 
 	return (
 		<div className="flex flex-col h-[calc(100vh-12rem)] bg-white rounded-lg shadow-lg">
-			<div className="bg-blue-500 text-white p-4 rounded-t-lg">
-				<h2 className="text-xl font-semibold">
-					Чат с ветеринаром (ID: {vetId})
-				</h2>
-				<p className="text-sm text-blue-100">Онлайн</p>
+			<div className="bg-blue-500 text-white p-4 rounded-t-lg flex items-center gap-4">
+				<button
+					onClick={() => navigate("/vets")}
+					className="mr-4 px-3 py-1 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-white"
+					aria-label="Назад к ветеринарам"
+				>
+					← Назад
+				</button>
+				<div>
+					<h2 className="text-xl font-semibold">
+						Чат с ветеринаром (ID: {vetId})
+					</h2>
+					<p className="text-sm text-blue-100">Онлайн</p>
+				</div>
 			</div>
 
 			<div className="flex-1 overflow-y-auto p-4 space-y-4">

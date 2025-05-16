@@ -1,4 +1,5 @@
 import type { LatLngExpression } from "leaflet";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useState } from "react";
 import {
@@ -8,6 +9,19 @@ import {
 	Popup,
 	TileLayer,
 } from "react-leaflet";
+
+// Исправляем проблему с иконками маркеров
+const defaultIcon = L.icon({
+	iconUrl: "/images/markers/marker-icon.png",
+	iconRetinaUrl: "/images/markers/marker-icon-2x.png",
+	shadowUrl: "/images/markers/marker-shadow.png",
+	iconSize: [25, 41],
+	iconAnchor: [12, 41],
+	popupAnchor: [1, -34],
+	shadowSize: [41, 41],
+});
+
+L.Marker.prototype.options.icon = defaultIcon;
 
 type Clinic = {
 	id: number;
