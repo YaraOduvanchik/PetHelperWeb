@@ -1,32 +1,10 @@
-import type { LatLngExpression } from "leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+import { Map, Overlay } from "pigeon-maps";
 import { useState } from "react";
-import {
-	AttributionControl,
-	MapContainer,
-	Marker,
-	Popup,
-	TileLayer,
-} from "react-leaflet";
-
-// Исправляем проблему с иконками маркеров
-const defaultIcon = L.icon({
-	iconUrl: "/images/markers/marker-icon.png",
-	iconRetinaUrl: "/images/markers/marker-icon-2x.png",
-	shadowUrl: "/images/markers/marker-shadow.png",
-	iconSize: [25, 41],
-	iconAnchor: [12, 41],
-	popupAnchor: [1, -34],
-	shadowSize: [41, 41],
-});
-
-L.Marker.prototype.options.icon = defaultIcon;
 
 type Clinic = {
 	id: number;
 	name: string;
-	position: LatLngExpression;
+	position: [number, number];
 	address: string;
 	rating: number;
 	workingHours: string;
@@ -34,14 +12,55 @@ type Clinic = {
 	services: string[];
 };
 
+const CustomMarker = ({
+	color,
+	isSelected,
+	onClick,
+}: {
+	color: string;
+	isSelected: boolean;
+	onClick: () => void;
+}) => {
+	return (
+		<div
+			onClick={onClick}
+			style={{
+				cursor: "pointer",
+				width: "24px",
+				height: "24px",
+			}}
+		>
+			<svg
+				viewBox="0 0 24 24"
+				width="24"
+				height="24"
+				stroke={color}
+				strokeWidth="2"
+				fill={isSelected ? color : "white"}
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				style={{
+					transform: isSelected ? "scale(1.2)" : "scale(1)",
+					transition: "transform 0.2s",
+				}}
+			>
+				<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+				<circle cx="12" cy="10" r="3"></circle>
+			</svg>
+		</div>
+	);
+};
+
 function MapPage() {
 	const [selectedClinic, setSelectedClinic] = useState<number | null>(null);
+	const [center, setCenter] = useState<[number, number]>([55.751244, 37.618423]);
+	const [zoom, setZoom] = useState(12);
 
 	const clinics: Clinic[] = [
 		{
 			id: 1,
 			name: "Клиника Айболит",
-			position: [55.751244, 37.618423] as LatLngExpression,
+			position: [55.751244, 37.618423],
 			address: "ул. Пушкина, д. 1",
 			rating: 4.8,
 			workingHours: "Пн-Вс: 09:00-21:00",
@@ -51,7 +70,7 @@ function MapPage() {
 		{
 			id: 2,
 			name: "Зоомед",
-			position: [55.761244, 37.628423] as LatLngExpression,
+			position: [55.761244, 37.628423],
 			address: "ул. Лермонтова, д. 2",
 			rating: 4.6,
 			workingHours: "Пн-Сб: 10:00-20:00",
@@ -61,7 +80,7 @@ function MapPage() {
 		{
 			id: 3,
 			name: "ВетЭксперт",
-			position: [55.755814, 37.617635] as LatLngExpression,
+			position: [55.755814, 37.617635],
 			address: "пр. Мира, д. 10",
 			rating: 4.9,
 			workingHours: "Пн-Вс: 00:00-24:00",
@@ -85,11 +104,24 @@ function MapPage() {
 
 	const handleClinicClick = (clinicId: number) => {
 		setSelectedClinic(clinicId);
-		// Найти элемент в списке и прокрутить к нему
+		const clinic = clinics.find((c) => c.id === clinicId);
+		if (clinic) {
+			setCenter(clinic.position);
+			setZoom(15);
+		}
 		const element = document.getElementById(`clinic-${clinicId}`);
 		if (element) {
 			element.scrollIntoView({ behavior: "smooth" });
 		}
+	};
+
+	// Кастомный провайдер тайлов карты (используем Carto вместо OpenStreetMap)
+	const mapTiler = (x: number, y: number, z: number) => {
+		return `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png`
+			.replace("{s}", "abcd"[Math.random() * 4 | 0])
+			.replace("{z}", z.toString())
+			.replace("{x}", x.toString())
+			.replace("{y}", y.toString());
 	};
 
 	return (
@@ -99,30 +131,30 @@ function MapPage() {
 
 				{/* Карта */}
 				<div className="bg-white p-4 shadow rounded-lg mb-6">
-					{" "}
-					<MapContainer
-						center={[55.751244, 37.618423] as LatLngExpression}
-						zoom={12}
-						style={{ height: "500px", width: "100%" }}
-						attributionControl={false}
+					<Map
+						height={500}
+						center={center}
+						zoom={zoom}
+						onBoundsChanged={({ center, zoom }) => {
+							setCenter(center);
+							setZoom(zoom);
+						}}
+						provider={mapTiler}
 					>
-						<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-						<AttributionControl position="topleft" />
 						{clinics.map((clinic) => (
-							<Marker
+							<Overlay
 								key={clinic.id}
-								position={clinic.position}
-								eventHandlers={{
-									click: () => handleClinicClick(clinic.id),
-								}}
+								anchor={clinic.position}
+								offset={[12, 24]}
 							>
-								<Popup>
-									<div className="font-semibold">{clinic.name}</div>
-									<div className="text-sm">{clinic.address}</div>
-								</Popup>
-							</Marker>
+								<CustomMarker
+									onClick={() => handleClinicClick(clinic.id)}
+									color={selectedClinic === clinic.id ? "#2563eb" : "#ef4444"}
+									isSelected={selectedClinic === clinic.id}
+								/>
+							</Overlay>
 						))}
-					</MapContainer>
+					</Map>
 				</div>
 
 				{/* Список клиник */}
@@ -131,9 +163,10 @@ function MapPage() {
 						<div
 							key={clinic.id}
 							id={`clinic-${clinic.id}`}
-							className={`bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 ${
+							className={`bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 cursor-pointer hover:shadow-lg transform hover:-translate-y-1 ${
 								selectedClinic === clinic.id ? "ring-2 ring-blue-500" : ""
 							}`}
+							onClick={() => handleClinicClick(clinic.id)}
 						>
 							<div className="p-6">
 								<div className="flex justify-between items-start mb-4">
